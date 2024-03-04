@@ -12,6 +12,9 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #effafa;
+  background-image: url('src/assets/images/bg-header-desktop.svg');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,6 +32,8 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
