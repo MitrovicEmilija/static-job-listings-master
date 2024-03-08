@@ -2,6 +2,20 @@ import React, { useState } from 'react'
 
 import { jobs } from '../data'
 
+const FilterBar = ({ selectedCategory, clearFilters }) => {
+
+    return (
+        <div className="bg-white p-4 flex justify-between items-center mb-4 rounded-md mr-16">
+            <div>
+                {selectedCategory && (
+                    <span className="inline-block bg-primary font-sans font-bold text-white px-2 py-1 rounded-md mr-2">{selectedCategory}</span>
+                )}
+            </div>
+            <button className="bg-primary text-white font-sans font-bold px-4 py-2 rounded-md" onClick={clearFilters}>X</button>
+        </div>
+    )
+}
+
 const JobCard = ({ job, handleCategoryClick }) => {
 
     const { company, logo, isNew, isFeatured, position, level, postedAt, contract, location, languages, tools } = job;
@@ -35,13 +49,13 @@ const JobCard = ({ job, handleCategoryClick }) => {
                 {/* Third column */}
                 <div className='justify-center ml-8 items-center flex'>
                     {languages && languages.map(language => (
-                        <button key={language} onClick={() => handleCategoryClick(language)} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{language}</button>
+                        <button key={language} onClick={() => handleCategoryClick(language)} className='mr-2 mb-2 text-sm bg-tertiary hover:bg-cyan-900 text-primary font-sans font-bold px-2 py-1 rounded-full'>{language}</button>
                     ))}
                     {tools && tools.map(tool => (
-                        <button key={tool} onClick={() => handleCategoryClick(tool)} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{tool}</button>
+                        <button key={tool} onClick={() => handleCategoryClick(tool)} className='mr-2 mb-2 text-sm bg-tertiary hover:bg-cyan-900 text-primary font-sans font-bold px-2 py-1 rounded-full'>{tool}</button>
                     ))}
                     {level && (
-                        <button onClick={() => handleCategoryClick(level)} className=' mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{level}</button>
+                        <button onClick={() => handleCategoryClick(level)} className=' mr-2 mb-2 text-sm bg-tertiary hover:bg-cyan-900 text-primary font-sans font-bold px-2 py-1 rounded-full'>{level}</button>
                     )}
                 </div>
             </div>
@@ -65,8 +79,13 @@ const List = () => {
     // Filter jobs based on the selected category
     const filteredJobs = selectedCategory ? jobs.filter(job => job.languages.includes(selectedCategory) || job.tools.includes(selectedCategory) || job.level === selectedCategory) : jobs;
 
+    const clearFilters = () => {
+        setSelectedCategory(null);
+    };
+
     return (
         <div className='container mx-auto py-8'>
+            {selectedCategory && <FilterBar selectedCategory={selectedCategory} clearFilters={clearFilters} />}
             {filteredJobs.map(job => (
                 <JobCard key={job.id} job={job} handleCategoryClick={handleCategoryClick} />
             ))}
