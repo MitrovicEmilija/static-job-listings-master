@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { jobs } from '../data'
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, handleCategoryClick }) => {
 
     const { company, logo, isNew, isFeatured, position, level, postedAt, contract, location, languages, tools } = job;
 
@@ -35,13 +35,13 @@ const JobCard = ({ job }) => {
                 {/* Third column */}
                 <div className='justify-center ml-8 items-center flex'>
                     {languages && languages.map(language => (
-                        <span key={language} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{language}</span>
+                        <button key={language} onClick={() => handleCategoryClick(language)} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{language}</button>
                     ))}
                     {tools && tools.map(tool => (
-                        <span key={tool} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{tool}</span>
+                        <button key={tool} onClick={() => handleCategoryClick(tool)} className='mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{tool}</button>
                     ))}
                     {level && (
-                        <span className=' mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{level}</span>
+                        <button onClick={() => handleCategoryClick(level)} className=' mr-2 mb-2 text-sm bg-tertiary text-primary font-sans font-bold px-2 py-1 rounded-full'>{level}</button>
                     )}
                 </div>
             </div>
@@ -51,14 +51,25 @@ const JobCard = ({ job }) => {
 }
 
 const List = () => {
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const handleCategoryClick = (category) => {
+        if (selectedCategory === category) {
+            // If the same category is clicked again, reset the filter
+            setSelectedCategory(null);
+        } else {
+            setSelectedCategory(category);
+        }
+    };
+
+    // Filter jobs based on the selected category
+    const filteredJobs = selectedCategory ? jobs.filter(job => job.languages.includes(selectedCategory) || job.tools.includes(selectedCategory) || job.level === selectedCategory) : jobs;
 
     return (
-        <div className='justify-center items-center'>
-            <div>
-                {jobs.map(job => (
-                    <JobCard key={job.id} job={job} />
-                ))}
-            </div>
+        <div className='container mx-auto py-8'>
+            {filteredJobs.map(job => (
+                <JobCard key={job.id} job={job} handleCategoryClick={handleCategoryClick} />
+            ))}
         </div>
     )
 }
